@@ -1,0 +1,98 @@
+### Read all user(request to a protected route)
+GET http://localhost:4000/user-api/users
+
+
+### Read user by id
+GET http://localhost:4000/user-api/user
+
+
+
+### Create new User
+POST http://localhost:4000/user-api/users
+Content-Type: application/json
+
+{
+    "username":"bhanu",
+    "password":"bhanu",
+    "email":"bhanu@mail.com",
+    "age":20
+}
+
+
+### Update existing user
+PUT http://localhost:4000/user-api/users
+Content-Type: application/json
+
+{
+    "username":"ravi",
+    "password":"ravi",
+    "email":"ravi@mail.com",
+    "age":20
+}
+
+
+### User Login
+POST http://localhost:4000/user-api/auth
+Content-Type:application/json
+
+{
+    "email":"kiran@mail.com",
+    "password":"kiran"
+}
+
+### Delete user by id
+DELETE http://localhost:4000/user-api/users/69aa8a4c5aff9ed7001e4af1
+
+
+
+
+### Product API
+
+### Read all products
+GET http://localhost:4000/product-api/products
+
+
+
+
+###Real product by brand
+GET http://localhost:4000/product-api/products/5
+
+
+
+### Create new Product
+POST http://localhost:4000/product-api/products
+Content-Type: application/json
+
+{
+    "productId":5,
+    "productName":"Watch",
+    "price":10000,
+    "brand":"Z"
+}
+
+### Modify existing product
+PUT http://localhost:4000/product-api/products/1
+Content-Type: application/json
+
+{
+    "productId":5,
+    "productName":"Watch",
+    "price":12000,
+    "brand":"Z"
+}
+
+
+### get product cookie
+POST http://localhost:4000/product-api/auth
+Content-Type:application/json
+
+{
+    "productId":2,
+}
+
+### Delete a product
+DELETE http://localhost:4000/product-api/products/5
+
+
+### Add product to user cart
+PUT http://localhost:4000/user-api/cart/product-id/69aacb6137254ba0406c7ef7
