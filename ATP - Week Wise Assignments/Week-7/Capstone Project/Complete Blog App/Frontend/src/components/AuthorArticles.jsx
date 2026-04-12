@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "../store/authStore";
-
+import { useEffect, useState } from 'react'
+import axios from 'axios'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { useAuth } from '../store/authStore'
+import BASE_URL from '../config'
 import {
   articleCardClass,
   articleTitle,
@@ -13,58 +13,57 @@ import {
   errorClass,
   emptyStateClass,
   articleStatusActive,
-  articleStatusDeleted,
-} from "../styles/common";
+  articleStatusDeleted
+} from '../styles/common'
 
 function AuthorArticles() {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const user = useAuth((state) => state.currentUser);
+  const navigate = useNavigate()
+  const location = useLocation()
+  const user = useAuth((state) => state.currentUser)
 
-  const [articles, setArticles] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [articles, setArticles] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
-    if (!user) return;
+    if (!user) return
 
     const getAuthorArticles = async () => {
-      setLoading(true);
+      setLoading(true)
       try {
-        const res = await axios.get(
-          "http://localhost:4000/author-api/articles",
-          { withCredentials: true },
-        );
+        const res = await axios.get(`${BASE_URL}/author-api/articles`, {
+          withCredentials: true
+        })
 
         if (res.status === 200) {
-          setArticles(res.data.payload);
+          setArticles(res.data.payload)
         }
       } catch (err) {
-        console.log(err);
-        setError(err.response?.data?.error || "Failed to fetch articles");
+        console.log(err)
+        setError(err.response?.data?.error || 'Failed to fetch articles')
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    getAuthorArticles();
-  }, [user, location.state?.refreshedAt]);
+    getAuthorArticles()
+  }, [user, location.state?.refreshedAt])
 
   const openArticle = (article) => {
     navigate(`/article/${article._id}`, {
-      state: article,
-    });
-  };
+      state: article
+    })
+  }
 
-  if (loading) return <p className={loadingClass}>Loading articles...</p>;
-  if (error) return <p className={errorClass}>{error}</p>;
+  if (loading) return <p className={loadingClass}>Loading articles...</p>
+  if (error) return <p className={errorClass}>{error}</p>
 
   if (articles.length === 0) {
     return (
       <div className={emptyStateClass}>
         You haven't published any articles yet.
       </div>
-    );
+    )
   }
 
   return (
@@ -80,7 +79,7 @@ function AuthorArticles() {
               article.isActive ? articleStatusActive : articleStatusDeleted
             }
           >
-            {article.isActive ? "ACTIVE" : "DELETED"}
+            {article.isActive ? 'ACTIVE' : 'DELETED'}
           </span>
 
           <div className="flex flex-col gap-2 min-w-0">
@@ -106,7 +105,7 @@ function AuthorArticles() {
         </div>
       ))}
     </div>
-  );
+  )
 }
 
-export default AuthorArticles;
+export default AuthorArticles

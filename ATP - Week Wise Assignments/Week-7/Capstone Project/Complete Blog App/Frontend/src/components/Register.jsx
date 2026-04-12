@@ -8,57 +8,58 @@ import {
   labelClass,
   pageBackground,
   submitBtn,
-  mutedText,
-} from "../styles/common";
-import { useForm } from "react-hook-form";
-import { NavLink, useNavigate } from "react-router";
-import { useState } from "react";
-import axios from "axios";
+  mutedText
+} from '../styles/common'
+import { useForm } from 'react-hook-form'
+import { NavLink, useNavigate } from 'react-router'
+import { useState } from 'react'
+import axios from 'axios'
+import BASE_URL from '../config'
 
 function Register() {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
-    formState: { errors },
-  } = useForm();
-  const [loading, setLoading] = useState(false);
-  const [apiError, setApiError] = useState(null);
-  const [preview, setPreview] = useState(null);
+    formState: { errors }
+  } = useForm()
+  const [loading, setLoading] = useState(false)
+  const [apiError, setApiError] = useState(null)
+  const [preview, setPreview] = useState(null)
 
   //When user registration submitted
   const onUserRegister = async (userObj) => {
-    console.log(userObj);
+    console.log(userObj)
     //file + userObj ---> FormData
     //create FormData object
-    const formData = new FormData();
+    const formData = new FormData()
     //add all user properties and file to this formData Object
-    formData.append("firstName", userObj.firstName);
-    formData.append("lastName", userObj.lastName);
-    formData.append("email", userObj.email);
-    formData.append("password", userObj.password);
-    formData.append("role", userObj.role);
+    formData.append('firstName', userObj.firstName)
+    formData.append('lastName', userObj.lastName)
+    formData.append('email', userObj.email)
+    formData.append('password', userObj.password)
+    formData.append('role', userObj.role)
     //Append if image is exists
     if (userObj.profileImageUrl?.[0]) {
-      formData.append("profileImageUrl", userObj.profileImageUrl[0]);
+      formData.append('profileImageUrl', userObj.profileImageUrl[0])
     }
     try {
-      setLoading(true);
+      setLoading(true)
       const res = await axios.post(
-        "http://localhost:4000/auth/users",
+        `${BASE_URL}/auth/users`,
         formData,
-        { withCredentials: true },
-      );
+        { withCredentials: true }
+      )
       if (res.status === 201) {
-        navigate("/login");
+        navigate('/login')
       }
     } catch (err) {
-      console.log("err in registration", err);
-      setApiError(err.response?.data?.error || "Registration failed");
+      console.log('err in registration', err)
+      setApiError(err.response?.data?.error || 'Registration failed')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <div
@@ -81,8 +82,8 @@ function Register() {
                 <input
                   type="radio"
                   value="USER"
-                  {...register("role", {
-                    required: "Please select a role",
+                  {...register('role', {
+                    required: 'Please select a role'
                   })}
                   className="accent-blue-600 w-4 h-4"
                 />
@@ -93,8 +94,8 @@ function Register() {
                 <input
                   type="radio"
                   value="AUTHOR"
-                  {...register("role", {
-                    required: "Please select a role",
+                  {...register('role', {
+                    required: 'Please select a role'
                   })}
                   className="accent-blue-600 w-4 h-4"
                 />
@@ -115,17 +116,17 @@ function Register() {
                 type="text"
                 className={inputClass}
                 placeholder="First name"
-                {...register("firstName", {
-                  required: "First name is required",
+                {...register('firstName', {
+                  required: 'First name is required',
                   minLength: {
                     value: 2,
-                    message: "At least 2 characters required",
+                    message: 'At least 2 characters required'
                   },
                   maxLength: {
                     value: 30,
-                    message: "Max 30 characters allowed",
+                    message: 'Max 30 characters allowed'
                   },
-                  validate: (v) => v.trim().length > 0 || "Cannot be empty",
+                  validate: (v) => v.trim().length > 0 || 'Cannot be empty'
                 })}
               />
               {errors.firstName && (
@@ -139,11 +140,11 @@ function Register() {
                 type="text"
                 className={inputClass}
                 placeholder="Last name"
-                {...register("lastName", {
+                {...register('lastName', {
                   maxLength: {
                     value: 30,
-                    message: "Max 30 characters allowed",
-                  },
+                    message: 'Max 30 characters allowed'
+                  }
                 })}
               />
               {errors.lastName && (
@@ -159,8 +160,8 @@ function Register() {
               type="email"
               className={inputClass}
               placeholder="you@example.com"
-              {...register("email", {
-                required: "Email is required",
+              {...register('email', {
+                required: 'Email is required'
               })}
             />
             {errors.email && (
@@ -175,8 +176,8 @@ function Register() {
               type="password"
               className={inputClass}
               placeholder="Min. 8 characters"
-              {...register("password", {
-                required: "Password is required",
+              {...register('password', {
+                required: 'Password is required'
               })}
             />
             {errors.password && (
@@ -192,25 +193,25 @@ function Register() {
               type="file"
               className={inputClass}
               accept="image/png,image/jpeg"
-              {...register("profileImageUrl", {
+              {...register('profileImageUrl', {
                 validate: {
                   fileType: (files) => {
-                    if (!files?.[0]) return true;
+                    if (!files?.[0]) return true
                     return (
-                      ["image/png", "image/jpeg"].includes(files[0].type) ||
-                      "Only JPG/PNG allowed"
-                    );
+                      ['image/png', 'image/jpeg'].includes(files[0].type) ||
+                      'Only JPG/PNG allowed'
+                    )
                   },
                   fileSize: (files) => {
-                    if (!files?.[0]) return true;
-                    return files[0].size <= 2 * 1024 * 1024 || "Max size 2MB";
-                  },
-                },
+                    if (!files?.[0]) return true
+                    return files[0].size <= 2 * 1024 * 1024 || 'Max size 2MB'
+                  }
+                }
               })}
               onChange={(event) => {
-                const file = event.target.files[0];
+                const file = event.target.files[0]
                 if (file) {
-                  setPreview(URL.createObjectURL(file));
+                  setPreview(URL.createObjectURL(file))
                 }
               }}
             />
@@ -238,14 +239,14 @@ function Register() {
 
         {/* FOOTER */}
         <p className={`${mutedText} text-center mt-5`}>
-          Already have an account?{" "}
+          Already have an account?{' '}
           <NavLink to="/login" className="text-[#0066cc] font-medium">
             Sign in
           </NavLink>
         </p>
       </div>
     </div>
-  );
+  )
 }
 
-export default Register;
+export default Register

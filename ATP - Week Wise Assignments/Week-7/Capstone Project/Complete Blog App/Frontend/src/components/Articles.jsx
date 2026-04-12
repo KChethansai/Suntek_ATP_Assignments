@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../store/authStore";
+import { useEffect, useMemo, useState } from 'react'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../store/authStore'
+import BASE_URL from '../config'
 import {
   pageWrapper,
   section,
@@ -24,80 +25,80 @@ import {
   loadingClass,
   errorClass,
   emptyStateClass,
-  divider,
-} from "../styles/common";
+  divider
+} from '../styles/common'
 
 function Articles() {
-  const navigate = useNavigate();
-  const user = useAuth((state) => state.currentUser);
+  const navigate = useNavigate()
+  const user = useAuth((state) => state.currentUser)
 
-  const [articles, setArticles] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [activeCategory, setActiveCategory] = useState("All");
+  const [articles, setArticles] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [activeCategory, setActiveCategory] = useState('All')
 
   useEffect(() => {
-    if (!user) return;
+    if (!user) return
 
     const getArticles = async () => {
-      setLoading(true);
+      setLoading(true)
 
       try {
-        const res = await axios.get("http://localhost:4000/user-api/articles", {
-          withCredentials: true,
-        });
+        const res = await axios.get(`${BASE_URL}/user-api/articles`, {
+          withCredentials: true
+        })
 
-        setArticles(res.data.payload || []);
+        setArticles(res.data.payload || [])
       } catch (err) {
-        setError(err.response?.data?.message || "Failed to load articles");
+        setError(err.response?.data?.message || 'Failed to load articles')
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    getArticles();
-  }, [user]);
+    getArticles()
+  }, [user])
 
   const categories = useMemo(() => {
     const uniqueCategories = [
-      ...new Set(articles.map((article) => article.category)),
-    ];
-    return ["All", ...uniqueCategories];
-  }, [articles]);
+      ...new Set(articles.map((article) => article.category))
+    ]
+    return ['All', ...uniqueCategories]
+  }, [articles])
 
   const filteredArticles = useMemo(() => {
-    const normalizedSearch = searchTerm.trim().toLowerCase();
+    const normalizedSearch = searchTerm.trim().toLowerCase()
 
     return articles.filter((article) => {
       const matchesCategory =
-        activeCategory === "All" || article.category === activeCategory;
+        activeCategory === 'All' || article.category === activeCategory
       const matchesSearch =
         normalizedSearch.length === 0 ||
         [article.title, article.category, article.content]
-          .join(" ")
+          .join(' ')
           .toLowerCase()
-          .includes(normalizedSearch);
+          .includes(normalizedSearch)
 
-      return matchesCategory && matchesSearch;
-    });
-  }, [articles, activeCategory, searchTerm]);
+      return matchesCategory && matchesSearch
+    })
+  }, [articles, activeCategory, searchTerm])
 
-  const featuredArticle = filteredArticles[0] || articles[0] || null;
+  const featuredArticle = filteredArticles[0] || articles[0] || null
   const remainingArticles = featuredArticle
     ? filteredArticles.filter((article) => article._id !== featuredArticle._id)
-    : filteredArticles;
+    : filteredArticles
 
   const openArticle = (article) => {
-    navigate(`/article/${article._id}`, { state: article });
-  };
+    navigate(`/article/${article._id}`, { state: article })
+  }
 
   const formatDate = (value) => {
-    return new Date(value).toLocaleDateString("en-IN", {
-      timeZone: "Asia/Kolkata",
-      dateStyle: "medium",
-    });
-  };
+    return new Date(value).toLocaleDateString('en-IN', {
+      timeZone: 'Asia/Kolkata',
+      dateStyle: 'medium'
+    })
+  }
 
   if (!user) {
     return (
@@ -111,7 +112,7 @@ function Articles() {
           </p>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -174,7 +175,7 @@ function Articles() {
                 className={
                   category === activeCategory
                     ? primaryBtn
-                    : secondaryBtn + " text-xs"
+                    : secondaryBtn + ' text-xs'
                 }
               >
                 {category}
@@ -260,7 +261,7 @@ function Articles() {
         )}
       </section>
     </div>
-  );
+  )
 }
 
-export default Articles;
+export default Articles

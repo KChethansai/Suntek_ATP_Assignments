@@ -1,8 +1,8 @@
-import { useAuth } from "../store/authStore";
-import { useNavigate } from "react-router";
-
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useAuth } from '../store/authStore'
+import { useNavigate } from 'react-router'
+import BASE_URL from '../config'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
 
 import {
   articleGrid,
@@ -11,63 +11,63 @@ import {
   ghostBtn,
   loadingClass,
   errorClass,
-  timestampClass,
-} from "../styles/common.js";
+  timestampClass
+} from '../styles/common.js'
 
 function UserProfile() {
-  const logout = useAuth((state) => state.logout);
-  const currentUser = useAuth((state) => state.currentUser);
-  const navigate = useNavigate();
+  const logout = useAuth((state) => state.logout)
+  const currentUser = useAuth((state) => state.currentUser)
+  const navigate = useNavigate()
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [articles, setArticles] = useState([]);
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+  const [articles, setArticles] = useState([])
 
   useEffect(() => {
     const getArticles = async () => {
-      setLoading(true);
+      setLoading(true)
       try {
         //read articles of all authors
-        let res = await axios.get("http://localhost:4000/user-api/articles", {
-          withCredentials: true,
-        });
+        let res = await axios.get(`${BASE_URL}/user-api/articles`, {
+          withCredentials: true
+        })
         //update articles state
         if (res.status === 200) {
-          setArticles(await res.data.payload);
+          setArticles(await res.data.payload)
         }
       } catch (err) {
-        setError(err.response?.data?.error || "Something went wrong");
+        setError(err.response?.data?.error || 'Something went wrong')
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    getArticles();
-  }, []);
+    getArticles()
+  }, [])
 
   // convert UTC → IST
   const formatDateIST = (date) => {
-    return new Date(date).toLocaleString("en-IN", {
-      timeZone: "Asia/Kolkata",
-      dateStyle: "medium",
-      timeStyle: "short",
-    });
-  };
+    return new Date(date).toLocaleString('en-IN', {
+      timeZone: 'Asia/Kolkata',
+      dateStyle: 'medium',
+      timeStyle: 'short'
+    })
+  }
 
   const onLogout = async () => {
-    await logout();
+    await logout()
 
-    navigate("/login");
-  };
+    navigate('/login')
+  }
 
   const navigateToArticleByID = (articleObj) => {
     navigate(`/article/${articleObj._id}`, {
-      state: articleObj,
-    });
-  };
+      state: articleObj
+    })
+  }
 
   if (loading) {
-    return <p className={loadingClass}>Loading articles...</p>;
+    return <p className={loadingClass}>Loading articles...</p>
   }
 
   return (
@@ -153,7 +153,7 @@ function UserProfile() {
         )}
       </div>
     </div>
-  );
+  )
 }
 
-export default UserProfile;
+export default UserProfile
