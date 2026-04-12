@@ -1,7 +1,7 @@
 import exp from 'express'
 import 'dotenv/config'
 import { connect } from 'mongoose'
-import { employeeApp } from './APis/EmployeeAPI.js'
+import { employeeApp } from './APIs/EmployeeAPI.js'
 import cors from 'cors'
 
 const app = exp()
