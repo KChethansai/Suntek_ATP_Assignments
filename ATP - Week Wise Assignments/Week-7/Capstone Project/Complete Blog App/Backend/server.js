@@ -30,9 +30,7 @@ app.use('/auth', commonApp)
 //Connect to DB
 const connectDB = async () => {
   try {
-    await connect(
-      'mongodb+srv://KChethanSai:chethansaiK1@cluster0.hvo4hz1.mongodb.net/BlogApp?appName=Cluster0'
-    )
+    await connect(process.env.DB_URL)
     console.log('DB Connected')
     const port = process.env.PORT
     app.listen(port, () => console.log(`server listening on ${port}`))
